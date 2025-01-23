@@ -145,7 +145,9 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 			}
 		}
 	}
-	for (int i = 0; i < 4; i++) {
+
+	// Draw current piece
+	for (int i = gamestate->game_over ? 4 : 0; i < 4; i++) {
 		SDL_Rect rect = {
 			grid_left + gamestate->current_piece.locations[i].x * grid_size,
 			grid_top + gamestate->current_piece.locations[i].y * grid_size,
