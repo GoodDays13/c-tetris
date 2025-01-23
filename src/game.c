@@ -3,12 +3,12 @@
 #include "game.h"
 
 struct Piece pieces[] = {
-	{{{4, 0}, {4, 1}, {5, 1}, {5, 2}}}, // Z
+	{{{5, 0}, {5, 1}, {4, 1}, {4, 2}}}, // Z
 	{{{4, 0}, {4, 1}, {4, 2}, {4, 3}}}, // I
 	{{{4, 0}, {4, 1}, {4, 2}, {5, 2}}}, // L
 	{{{4, 0}, {4, 1}, {4, 2}, {3, 2}}}, // J
 	{{{4, 0}, {4, 1}, {5, 1}, {3, 1}}}, // T
-	{{{5, 0}, {5, 1}, {4, 1}, {4, 2}}}, // S
+	{{{4, 0}, {4, 1}, {5, 1}, {5, 2}}}, // S
 	{{{4, 0}, {4, 1}, {5, 0}, {5, 1}}}  // O
 };
 
@@ -54,7 +54,7 @@ update_game(struct GameState *game, struct Inputs *inputs, float delta_time) {
 				// Piece can't move down
 				// Place piece
 				for (int i = 0; i < 4; i++) {
-					game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x] = 1;
+					game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x] = game->piece_index + 1;
 				}
 				// Check for full rows
 				check_rows(game);

@@ -1,6 +1,23 @@
 #include "renderer.h"
 #include "game.h"
 
+struct Color {
+		int r;
+		int g;
+		int b;
+		int a;
+};
+
+struct Color piece_colors[] = {
+	{0, 255, 0, 255}, // PIECE_Z
+	{0, 255, 255, 255}, // PIECE_I
+	{255, 170, 0, 255}, // PIECE_L
+	{0, 0, 255, 255}, // PIECE_J
+	{255, 0, 255, 255}, // PIECE_T
+	{255, 0, 0, 255}, // PIECE_S
+	{255, 255, 0, 255} // PIECE_O
+};
+
 int
 create_window(struct Renderer *renderer, const char *title, int width, int height) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -64,7 +81,8 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 					grid_size,
 					grid_size
 				};
-				SDL_SetRenderDrawColor(renderer->renderer, 255, 255, 255, 255);
+				struct Color color = piece_colors[gamestate->grid[y][x] - 1];
+				SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
 				SDL_RenderFillRect(renderer->renderer, &rect);
 			} else {
 				for (int i = 0; i < 4; i++) {
@@ -75,7 +93,8 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 							grid_size,
 							grid_size
 						};
-						SDL_SetRenderDrawColor(renderer->renderer, 255, 255, 255, 255);
+						struct Color color = piece_colors[gamestate->piece_index];
+						SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
 						SDL_RenderFillRect(renderer->renderer, &rect);
 					}
 				}
