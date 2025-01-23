@@ -1,25 +1,16 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "game.h"
 
 struct Piece pieces[] = {
-	{{{5, 0}, {5, 1}, {4, 1}, {4, 2}}}, // Z
-	{{{4, 0}, {4, 1}, {4, 2}, {4, 3}}}, // I
-	{{{4, 0}, {4, 1}, {4, 2}, {5, 2}}}, // L
-	{{{4, 0}, {4, 1}, {4, 2}, {3, 2}}}, // J
-	{{{4, 0}, {4, 1}, {5, 1}, {3, 1}}}, // T
-	{{{4, 0}, {4, 1}, {5, 1}, {5, 2}}}, // S
-	{{{4, 0}, {4, 1}, {5, 0}, {5, 1}}}  // O
-};
-
-enum PieceType {
-	PIECE_Z,
-	PIECE_I,
-	PIECE_L,
-	PIECE_J,
-	PIECE_T,
-	PIECE_S,
-	PIECE_O
+	{{{5, 0}, {5, 1}, {4, 1}, {4, 2}}, PIECE_Z}, // Z
+	{{{4, 0}, {4, 1}, {4, 2}, {4, 3}}, PIECE_I}, // I
+	{{{4, 0}, {4, 1}, {4, 2}, {5, 2}}, PIECE_L}, // L
+	{{{4, 0}, {4, 1}, {4, 2}, {3, 2}}, PIECE_J}, // J
+	{{{4, 0}, {4, 1}, {5, 1}, {3, 1}}, PIECE_T}, // T
+	{{{4, 0}, {4, 1}, {5, 1}, {5, 2}}, PIECE_S}, // S
+	{{{4, 0}, {4, 1}, {5, 0}, {5, 1}}, PIECE_O}  // O
 };
 
 void
@@ -31,10 +22,14 @@ init_game(struct GameState *game) {
 	}
 	srand(time(NULL));
 	create_piece(game);
+	game->level = 1;
+	game->speed = 1.0;
 }
 
 void
 update_game(struct GameState *game, struct Inputs *inputs, float delta_time) {
+	if (game->game_over)
+		return;
 	handle_moves(game, inputs);
 
 	game->time_till_drop -= delta_time;
@@ -42,11 +37,7 @@ update_game(struct GameState *game, struct Inputs *inputs, float delta_time) {
 		game->time_till_drop = 0.1;
 	}
 	if (game->time_till_drop <= 0) {
-		if (inputs->down) {
-			game->time_till_drop = 0.1;
-		} else {
-			game->time_till_drop += 1;
-		}
+		game->time_till_drop += 1.0 / game->level;
 		// Check if piece can move down
 		for (int i = 0; i < 4; i++) {
 			if (game->current_piece.locations[i].y + 1 >= GRID_HEIGHT ||
@@ -54,10 +45,11 @@ update_game(struct GameState *game, struct Inputs *inputs, float delta_time) {
 				// Piece can't move down
 				// Place piece
 				for (int i = 0; i < 4; i++) {
-					game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x] = game->piece_index + 1;
+					game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x] = game->current_piece.type + 1;
 				}
 				// Check for full rows
-				check_rows(game);
+				int rows = check_rows(game);
+				calculate_score(game, rows);
 				// Spawn new piece
 				create_piece(game);
 				return;
@@ -117,12 +109,16 @@ void
 create_piece(struct GameState *game) {
 	int num = rand() % 7;
 	game->current_piece = pieces[num];
-	game->piece_index = num;
+	for (int i = 0; i < 4; i++) {
+		if (game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x]) {
+			game->game_over = 1;
+		}
+	}
 }
 
 void
 rotate_piece(struct GameState *game) {
-	if (game->piece_index == PIECE_O)
+	if (game->current_piece.type == PIECE_O)
 		return;
 
 	struct Location center = game->current_piece.locations[1];
@@ -170,4 +166,34 @@ check_rows(struct GameState *game) {
 		}
 	}
 	return full_rows;
+}
+
+void
+calculate_score(struct GameState *game, int rows_cleared) {
+	int gained_score;
+	printf("Rows cleared: %d\n", rows_cleared);
+	switch (rows_cleared) {
+		case 0:
+			gained_score = 0;
+			break;
+		case 1:
+			gained_score = 100 * game->level;
+			break;
+		case 2:
+			gained_score = 300 * game->level;
+			break;
+		case 3:
+			gained_score = 500 * game->level;
+			break;
+		case 4:
+			gained_score = 800 * game->level;
+			break;
+	}
+	game->score += gained_score;
+	printf("Score: %d\n", game->score);
+	while (game->score >= 250 * game->level * (game->level + 1)) {
+		game->level++;
+		game->speed /= 1.1;
+		printf("Level: %d\n", game->level);
+	}
 }

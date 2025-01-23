@@ -84,22 +84,27 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 				struct Color color = piece_colors[gamestate->grid[y][x] - 1];
 				SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
 				SDL_RenderFillRect(renderer->renderer, &rect);
-			} else {
-				for (int i = 0; i < 4; i++) {
-					if (gamestate->current_piece.locations[i].x == x && gamestate->current_piece.locations[i].y == y) {
-						SDL_Rect rect = {
-							grid_left + x * grid_size,
-							grid_top + y * grid_size,
-							grid_size,
-							grid_size
-						};
-						struct Color color = piece_colors[gamestate->piece_index];
-						SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
-						SDL_RenderFillRect(renderer->renderer, &rect);
-					}
+				if (grid_size > 3) {
+					SDL_SetRenderDrawColor(renderer->renderer, 0, 0, 0, 255);
+					SDL_RenderDrawRect(renderer->renderer, &rect);
 				}
 			}
 		}
+	}
+	for (int i = 0; i < 4; i++) {
+			SDL_Rect rect = {
+				grid_left + gamestate->current_piece.locations[i].x * grid_size,
+				grid_top + gamestate->current_piece.locations[i].y * grid_size,
+				grid_size,
+				grid_size
+			};
+			struct Color color = piece_colors[gamestate->current_piece.type];
+			SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
+			SDL_RenderFillRect(renderer->renderer, &rect);
+			if (grid_size > 3) {
+				SDL_SetRenderDrawColor(renderer->renderer, 0, 0, 0, 255);
+				SDL_RenderDrawRect(renderer->renderer, &rect);
+			}
 	}
 
 	SDL_Rect rect = {

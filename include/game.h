@@ -9,8 +9,19 @@ struct Location {
 	int y;
 };
 
+enum PieceType {
+	PIECE_Z,
+	PIECE_I,
+	PIECE_L,
+	PIECE_J,
+	PIECE_T,
+	PIECE_S,
+	PIECE_O
+};
+
 struct Piece {
 	struct Location locations[4];
+	enum PieceType type;
 };
 
 struct Inputs {
@@ -23,8 +34,11 @@ struct Inputs {
 struct GameState {
 	int grid[GRID_HEIGHT][GRID_WIDTH];
 	float time_till_drop;
+	float speed;
+	int level;
+	int score;
 	struct Piece current_piece;
-	int piece_index;
+	int game_over;
 };
 
 void init_game(struct GameState *game);
@@ -38,6 +52,8 @@ void handle_moves(struct GameState *game, struct Inputs *inputs);
 void rotate_piece(struct GameState *game);
 
 int check_rows(struct GameState *game);
+
+void calculate_score(struct GameState *game, int rows_cleared);
 
 extern struct Piece pieces[];
 
