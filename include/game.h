@@ -20,17 +20,11 @@ struct Inputs {
 	int rotate;
 };
 
-enum Rotation {
-	normal,
-	none,
-	longblock
-};
-
 struct GameState {
 	int grid[GRID_HEIGHT][GRID_WIDTH];
 	float time_till_drop;
 	struct Piece current_piece;
-	enum Rotation rotate_rule;
+	int piece_index;
 };
 
 void init_game(struct GameState *game);

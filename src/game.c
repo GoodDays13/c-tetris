@@ -12,6 +12,16 @@ struct Piece pieces[] = {
 	{{{4, 0}, {4, 1}, {5, 0}, {5, 1}}}  // O
 };
 
+enum PieceType {
+	PIECE_Z,
+	PIECE_I,
+	PIECE_L,
+	PIECE_J,
+	PIECE_T,
+	PIECE_S,
+	PIECE_O
+};
+
 void
 init_game(struct GameState *game) {
 	for (int y = 0; y < GRID_HEIGHT; y++) {
@@ -107,11 +117,12 @@ void
 create_piece(struct GameState *game) {
 	int num = rand() % 7;
 	game->current_piece = pieces[num];
+	game->piece_index = num;
 }
 
 void
 rotate_piece(struct GameState *game) {
-	if (game->rotate_rule == none)
+	if (game->piece_index == PIECE_O)
 		return;
 
 	struct Location center = game->current_piece.locations[1];
