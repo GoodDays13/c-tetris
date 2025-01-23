@@ -55,6 +55,6 @@ int check_rows(struct GameState *game);
 
 void calculate_score(struct GameState *game, int rows_cleared);
 
-extern struct Piece pieces[];
+extern const struct Piece pieces[];
 
 #endif

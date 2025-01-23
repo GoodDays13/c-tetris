@@ -3,7 +3,7 @@
 #include <time.h>
 #include "game.h"
 
-struct Piece pieces[] = {
+const struct Piece pieces[] = {
 	{{{5, 0}, {5, 1}, {4, 1}, {4, 2}}, PIECE_Z}, // Z
 	{{{4, 0}, {4, 1}, {4, 2}, {4, 3}}, PIECE_I}, // I
 	{{{4, 0}, {4, 1}, {4, 2}, {5, 2}}, PIECE_L}, // L

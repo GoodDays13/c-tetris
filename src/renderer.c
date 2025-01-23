@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "game.h"
+#include <SDL2/SDL_render.h>
 
 struct Color {
 		int r;
@@ -16,6 +17,59 @@ struct Color piece_colors[] = {
 	{255, 0, 255, 255}, // PIECE_T
 	{255, 0, 0, 255}, // PIECE_S
 	{255, 255, 0, 255} // PIECE_O
+};
+
+const int numbers[10][5][3] = {
+	{{1,1,1}, // 0
+	 {1,0,1},
+	 {1,0,1},
+	 {1,0,1},
+	 {1,1,1}},
+	{{0,1,0}, // 1
+	 {1,1,0},
+	 {0,1,0},
+	 {0,1,0},
+	 {1,1,1}},
+	{{1,1,1}, // 2
+	 {0,0,1},
+	 {1,1,1},
+	 {1,0,0},
+	 {1,1,1}},
+	{{1,1,1}, // 3
+	 {0,0,1},
+	 {1,1,1},
+	 {0,0,1},
+	 {1,1,1}},
+	{{1,0,1}, // 4
+	 {1,0,1},
+	 {1,1,1},
+	 {0,0,1},
+	 {0,0,1}},
+	{{1,1,1}, // 5
+	 {1,0,0},
+	 {1,1,1},
+	 {0,0,1},
+	 {1,1,1}},
+	{{1,1,1}, // 6
+	 {1,0,0},
+	 {1,1,1},
+	 {1,0,1},
+	 {1,1,1}},
+	{{1,1,1}, // 7
+	 {0,0,1},
+	 {0,0,1},
+	 {0,0,1},
+	 {0,0,1}},
+	{{1,1,1}, // 8
+	 {1,0,1},
+	 {1,1,1},
+	 {1,0,1},
+	 {1,1,1}},
+	{{1,1,1}, // 9
+	 {1,0,1},
+	 {1,1,1},
+	 {0,0,1},
+	 {1,1,1}}
 };
 
 int
@@ -71,7 +125,7 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 	int grid_bottom = renderer->height - 1;
 	int grid_size = (grid_bottom - grid_top) / GRID_HEIGHT;
 	int grid_left = (renderer->width - grid_size * GRID_WIDTH) / 2;
-	//int grid_right = grid_left + grid_size * GRID_WIDTH;
+	int grid_right = grid_left + grid_size * GRID_WIDTH;
 	for (int y = 0; y < GRID_HEIGHT; y++) {
 		for (int x = 0; x < GRID_WIDTH; x++) {
 			if (gamestate->grid[y][x]) {
@@ -92,19 +146,19 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 		}
 	}
 	for (int i = 0; i < 4; i++) {
-			SDL_Rect rect = {
-				grid_left + gamestate->current_piece.locations[i].x * grid_size,
-				grid_top + gamestate->current_piece.locations[i].y * grid_size,
-				grid_size,
-				grid_size
-			};
-			struct Color color = piece_colors[gamestate->current_piece.type];
-			SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
-			SDL_RenderFillRect(renderer->renderer, &rect);
-			if (grid_size > 3) {
-				SDL_SetRenderDrawColor(renderer->renderer, 0, 0, 0, 255);
-				SDL_RenderDrawRect(renderer->renderer, &rect);
-			}
+		SDL_Rect rect = {
+			grid_left + gamestate->current_piece.locations[i].x * grid_size,
+			grid_top + gamestate->current_piece.locations[i].y * grid_size,
+			grid_size,
+			grid_size
+		};
+		struct Color color = piece_colors[gamestate->current_piece.type];
+		SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(renderer->renderer, &rect);
+		if (grid_size > 3) {
+			SDL_SetRenderDrawColor(renderer->renderer, 0, 0, 0, 255);
+			SDL_RenderDrawRect(renderer->renderer, &rect);
+		}
 	}
 
 	SDL_Rect rect = {
@@ -116,5 +170,43 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 	SDL_SetRenderDrawColor(renderer->renderer, 255, 255, 255, 255);
 	SDL_RenderDrawRect(renderer->renderer, &rect);
 
+	// Render level
+	render_digit(renderer, gamestate->level, grid_right + grid_size / 2, 2 * grid_size + 1, grid_size / 2);
+	// Render score
+	render_number(renderer, gamestate->score, grid_right + grid_size / 2, 5 * grid_size + 1, grid_size / 5);
+
 	SDL_RenderPresent(renderer->renderer);
+}
+
+void
+render_digit(struct Renderer *renderer, int number, int x, int y, int block_size) {
+	SDL_SetRenderDrawColor(renderer->renderer, 255, 255, 255, 255);
+	SDL_Rect rect;
+	rect.w = block_size;
+	rect.h = block_size;
+	for (int y_block = 0; y_block < 5; y_block++) {
+		for (int x_block = 0; x_block < 3; x_block++) {
+			if (numbers[number][y_block][x_block]) {
+				rect.x = x + x_block * block_size;
+				rect.y = y + y_block * block_size;
+				SDL_RenderFillRect(renderer->renderer, &rect);
+			}
+		}
+	}
+}
+
+void render_number(struct Renderer *renderer, int number, int x, int y, int block_size) {
+	if (number == 0) {
+		render_digit(renderer, 0, x, y, block_size);
+		return;
+	}
+	int digits[10];
+	int digit_count = 0;
+	while (number > 0) {
+		digits[digit_count++] = number % 10;
+		number /= 10;
+	}
+	for (int i = digit_count - 1; i >= 0; i--) {
+		render_digit(renderer, digits[i], x + (digit_count - 1 - i) * block_size * 4, y, block_size);
+	}
 }
