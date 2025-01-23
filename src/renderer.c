@@ -50,8 +50,8 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 
 	// Render game
 	// Draw grid
-	int grid_top = 0;
-	int grid_bottom = renderer->height;
+	int grid_top = 1;
+	int grid_bottom = renderer->height - 1;
 	int grid_size = (grid_bottom - grid_top) / GRID_HEIGHT;
 	int grid_left = (renderer->width - grid_size * GRID_WIDTH) / 2;
 	//int grid_right = grid_left + grid_size * GRID_WIDTH;
@@ -84,10 +84,10 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 	}
 
 	SDL_Rect rect = {
-		grid_left,
-		grid_top,
-		grid_size * GRID_WIDTH,
-		grid_size * GRID_HEIGHT
+		grid_left - 1,
+		grid_top - 1,
+		grid_size * GRID_WIDTH + 2,
+		grid_size * GRID_HEIGHT + 2
 	};
 	SDL_SetRenderDrawColor(renderer->renderer, 255, 255, 255, 255);
 	SDL_RenderDrawRect(renderer->renderer, &rect);
