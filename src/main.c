@@ -1,7 +1,9 @@
 #include "renderer.h"
 #include "game.h"
 
-int main() {
+int main(int argc, char *argv[]) {
+	(void)argc;
+	(void)argv;
 	struct Renderer renderer;
 
 	if (create_window(&renderer, "New Window", 500, 500))
