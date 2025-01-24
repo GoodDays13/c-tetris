@@ -1,7 +1,7 @@
 # Compiler settings
 CC=gcc
 CC_WIN=x86_64-w64-mingw32-gcc
-CFLAGS=-Wall -Wextra -Werror -g -O0
+CFLAGS=-Wall -Wextra -Werror -g -O0 -MMD
 INCLUDES=-Iinclude
 
 # Platform-specific settings
@@ -23,7 +23,7 @@ OBJS_WIN=$(patsubst $(SOURCEDIR)/%.c,$(OBJDIR)/%_win.o,$(SRCS))
 # Default target
 linux: $(TARGET_LINUX)
 
-release: CFLAGS=-Wall -O2
+release: CFLAGS=-Wall -O2 -MMD
 release: linux windows
 	strip $(TARGET_LINUX)
 	strip $(TARGET_WIN)
@@ -66,3 +66,5 @@ cleanlinux:
 	rm -rf $(TARGET_LINUX) $(OBJS)
 
 .PHONY: clean linux windows release cleanwin cleanlinux static
+
+-include $(OBJDIR)/*.d
