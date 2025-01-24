@@ -20,6 +20,16 @@ init_game(struct GameState *game) {
 		}
 	}
 	srand(time(NULL));
+	game->bucket[0] = PIECE_Z;
+	game->bucket[1] = PIECE_I;
+	game->bucket[2] = PIECE_L;
+	game->bucket[3] = PIECE_J;
+	game->bucket[4] = PIECE_T;
+	game->bucket[5] = PIECE_S;
+	game->bucket[6] = PIECE_O;
+
+	shuffle_bucket(game);
+	game->bucket_index = 0;
 	create_piece(game);
 	game->level = 1;
 	game->speed = 1.0;
@@ -106,12 +116,27 @@ handle_moves(struct GameState *game, struct Inputs *inputs) {
 
 void
 create_piece(struct GameState *game) {
-	int num = rand() % 7;
+	int num = game->bucket[game->bucket_index++];
+	if (game->bucket_index == 7) {
+		shuffle_bucket(game);
+		game->bucket_index = 0;
+	}
+
 	game->current_piece = pieces[num];
 	for (int i = 0; i < 4; i++) {
 		if (game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x]) {
 			game->game_over = 1;
 		}
+	}
+}
+
+void
+shuffle_bucket(struct GameState *game) {
+	for (int i = 6; i > 0; i--) {
+		int j = rand() % (i + 1);
+		enum PieceType temp = game->bucket[i];
+		game->bucket[i] = game->bucket[j];
+		game->bucket[j] = temp;
 	}
 }
 

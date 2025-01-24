@@ -39,6 +39,8 @@ struct GameState {
 	int score;
 	struct Piece current_piece;
 	int game_over;
+	enum PieceType bucket[7];
+	int bucket_index;
 };
 
 void init_game(struct GameState *game);
@@ -46,6 +48,8 @@ void init_game(struct GameState *game);
 void update_game(struct GameState *game, struct Inputs *inputs, float delta_time);
 
 void create_piece(struct GameState *game);
+
+void shuffle_bucket(struct GameState *game);
 
 void handle_moves(struct GameState *game, struct Inputs *inputs);
 
