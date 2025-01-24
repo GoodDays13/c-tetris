@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "game.h"
@@ -170,8 +169,7 @@ check_rows(struct GameState *game) {
 
 void
 calculate_score(struct GameState *game, int rows_cleared) {
-	int gained_score;
-	printf("Rows cleared: %d\n", rows_cleared);
+	int gained_score = 0;
 	switch (rows_cleared) {
 		case 0:
 			gained_score = 0;
@@ -190,10 +188,8 @@ calculate_score(struct GameState *game, int rows_cleared) {
 			break;
 	}
 	game->score += gained_score;
-	printf("Score: %d\n", game->score);
 	while (game->score >= 250 * game->level * (game->level + 1)) {
 		game->level++;
 		game->speed /= 1.1;
-		printf("Level: %d\n", game->level);
 	}
 }
