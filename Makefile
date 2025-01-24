@@ -1,7 +1,7 @@
 # Compiler settings
 CC=gcc
 CC_WIN=x86_64-w64-mingw32-gcc
-CFLAGS=-Wall -Wextra -Werror -g
+CFLAGS=-Wall -Wextra -Werror -g -O0
 INCLUDES=-Iinclude
 
 # Platform-specific settings
@@ -25,9 +25,15 @@ linux: $(TARGET_LINUX)
 
 release: CFLAGS=-Wall -O2
 release: linux windows
+	strip $(TARGET_LINUX)
+	strip $(TARGET_WIN)
 
 # Windows target
 windows: $(TARGET_WIN)
+
+static: LDFLAGS_WIN=-lmingw32 -Wl,-Bstatic -lSDL2main -lSDL2 -Wl,-Bdynamic -lversion -lwinmm -lgdi32 -lsetupapi -limm32 -lole32 -loleaut32
+static: windows
+	rm -f $(BINDIR)/SDL2.dll
 
 $(TARGET_LINUX): $(OBJS) | $(BINDIR)
 	$(CC) -o $@ $^ $(LDFLAGS_LINUX)
@@ -59,4 +65,4 @@ cleanwin:
 cleanlinux:
 	rm -rf $(TARGET_LINUX) $(OBJS)
 
-.PHONY: clean linux windows release cleanwin cleanlinux
+.PHONY: clean linux windows release cleanwin cleanlinux static
