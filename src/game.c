@@ -33,6 +33,7 @@ init_game(struct GameState *game) {
 	game->bucket_index = 0;
 	create_piece(game);
 	game->level = 1;
+	game->score = 0;
 	game->speed = 1.0;
 	game->time_till_drop = 1.0;
 }
