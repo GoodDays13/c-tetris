@@ -14,6 +14,7 @@ const struct Piece pieces[] = {
 
 void
 init_game(struct GameState *game) {
+	game->game_over = 0;
 	for (int y = 0; y < GRID_HEIGHT; y++) {
 		for (int x = 0; x < GRID_WIDTH; x++) {
 			game->grid[y][x] = 0;
@@ -33,6 +34,7 @@ init_game(struct GameState *game) {
 	create_piece(game);
 	game->level = 1;
 	game->speed = 1.0;
+	game->time_till_drop = 1.0;
 }
 
 void

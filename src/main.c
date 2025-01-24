@@ -45,6 +45,10 @@ int main(int argc, char *argv[]) {
 						case SDLK_UP:
 							inputs.rotate = 1;
 							break;
+						case SDLK_r:
+							if (gamestate.game_over)
+								init_game(&gamestate);
+							break;
 					}
 					break;
 				case SDL_KEYUP:
