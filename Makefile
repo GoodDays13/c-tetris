@@ -23,14 +23,20 @@ OBJS_WIN=$(patsubst $(SOURCEDIR)/%.c,$(OBJDIR)/%_win.o,$(SRCS))
 # Default target
 linux: $(TARGET_LINUX)
 
+release: CFLAGS=-Wall -O2
+release: linux windows
+
 # Windows target
 windows: $(TARGET_WIN)
 
 $(TARGET_LINUX): $(OBJS) | $(BINDIR)
 	$(CC) -o $@ $^ $(LDFLAGS_LINUX)
 
-$(TARGET_WIN): $(OBJS_WIN) | $(BINDIR)
+$(TARGET_WIN): $(OBJS_WIN) | $(BINDIR) $(BINDIR)/SDL2.dll
 	$(CC_WIN) -o $@ $^ $(LDFLAGS_WIN)
+
+$(BINDIR)/SDL2.dll: /usr/x86_64-w64-mingw32/bin/SDL2.dll
+	cp $< $@
 
 $(OBJDIR)/%.o: $(SOURCEDIR)/%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -53,4 +59,4 @@ cleanwin:
 cleanlinux:
 	rm -rf $(TARGET_LINUX) $(OBJS)
 
-.PHONY: clean linux windows
+.PHONY: clean linux windows release cleanwin cleanlinux
