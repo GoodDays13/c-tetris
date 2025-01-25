@@ -114,6 +114,24 @@ destroy_window(struct Renderer *renderer) {
 }
 
 void
+render_piece(struct Renderer *renderer, const struct Piece *piece, int x, int y, int block_size) {
+	struct Color color = piece_colors[piece->type];
+	SDL_Rect rect;
+	rect.w = block_size;
+	rect.h = block_size;
+	for (int i = 0; i < 4; i++) {
+		rect.x = x + piece->locations[i].x * block_size;
+		rect.y = y + piece->locations[i].y * block_size;
+		SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(renderer->renderer, &rect);
+		if (block_size > 3) {
+			SDL_SetRenderDrawColor(renderer->renderer, 0, 0, 0, 255);
+			SDL_RenderDrawRect(renderer->renderer, &rect);
+		}
+	}
+}
+
+void
 render_game(struct Renderer *renderer, struct GameState *gamestate) {
 	SDL_GetWindowSize(renderer->window, &renderer->width, &renderer->height);
 	SDL_SetRenderDrawColor(renderer->renderer, 0, 0, 0, 255);
@@ -147,21 +165,8 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 	}
 
 	// Draw current piece
-	for (int i = gamestate->game_over ? 4 : 0; i < 4; i++) {
-		SDL_Rect rect = {
-			grid_left + gamestate->current_piece.locations[i].x * grid_size,
-			grid_top + gamestate->current_piece.locations[i].y * grid_size,
-			grid_size,
-			grid_size
-		};
-		struct Color color = piece_colors[gamestate->current_piece.type];
-		SDL_SetRenderDrawColor(renderer->renderer, color.r, color.g, color.b, color.a);
-		SDL_RenderFillRect(renderer->renderer, &rect);
-		if (grid_size > 3) {
-			SDL_SetRenderDrawColor(renderer->renderer, 0, 0, 0, 255);
-			SDL_RenderDrawRect(renderer->renderer, &rect);
-		}
-	}
+	if (!gamestate->game_over)
+		render_piece(renderer, &gamestate->current_piece, grid_left, grid_top, grid_size);
 
 	SDL_Rect rect = {
 		grid_left - 1,
@@ -176,6 +181,18 @@ render_game(struct Renderer *renderer, struct GameState *gamestate) {
 	render_digit(renderer, gamestate->level, grid_right + grid_size / 2, 2 * grid_size + 1, grid_size / 2);
 	// Render score
 	render_number(renderer, gamestate->score, grid_right + grid_size / 2, 5 * grid_size + 1, grid_size / 5);
+	// Render next piece
+	render_piece(renderer, &pieces[gamestate->bucket[gamestate->bucket_index]],
+			  grid_right - grid_size * 2,
+			  grid_bottom - grid_size * 5,
+			  grid_size
+			  );
+	SDL_SetRenderDrawColor(renderer->renderer, 255, 255, 255, 255);
+	rect.x = grid_right + grid_size - 1;
+	rect.y = grid_bottom - grid_size * 5 - 1;
+	rect.w = grid_size * 4 + 2;
+	rect.h = grid_size * 4 + 2;
+	SDL_RenderDrawRect(renderer->renderer, &rect);
 
 	SDL_RenderPresent(renderer->renderer);
 }

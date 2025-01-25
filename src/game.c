@@ -4,9 +4,9 @@
 
 const struct Piece pieces[] = {
 	{{{5, 0}, {5, 1}, {4, 1}, {4, 2}}, PIECE_Z}, // Z
-	{{{4, 0}, {4, 1}, {4, 2}, {4, 3}}, PIECE_I}, // I
+	{{{3, 0}, {4, 0}, {5, 0}, {6, 0}}, PIECE_I}, // I
 	{{{4, 0}, {4, 1}, {4, 2}, {5, 2}}, PIECE_L}, // L
-	{{{4, 0}, {4, 1}, {4, 2}, {3, 2}}, PIECE_J}, // J
+	{{{5, 0}, {5, 1}, {5, 2}, {4, 2}}, PIECE_J}, // J
 	{{{4, 0}, {4, 1}, {5, 1}, {3, 1}}, PIECE_T}, // T
 	{{{4, 0}, {4, 1}, {5, 1}, {5, 2}}, PIECE_S}, // S
 	{{{4, 0}, {4, 1}, {5, 0}, {5, 1}}, PIECE_O}  // O
@@ -128,6 +128,7 @@ create_piece(struct GameState *game) {
 	game->current_piece = pieces[num];
 	for (int i = 0; i < 4; i++) {
 		if (game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x]) {
+			game->bucket_index--;
 			game->game_over = 1;
 		}
 	}
