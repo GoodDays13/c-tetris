@@ -9,6 +9,26 @@
 
 struct AudioState audio_state = {0};
 
+const float octave2[] = {
+	65.4, // C2
+	73.4, // D2
+	82.4, // E2
+	87.3, // F2
+	98.0, // G2
+	110.0, // A2
+	123.5, // B2
+};
+
+const float octave3[] = {
+	130.8, // C3
+	146.8, // D3
+	164.8, // E3
+	174.6, // F3
+	196.0, // G3
+	220.0, // A3
+	246.9, // B3
+};
+
 const float octave4[] = {
 	261.6, // C4
 	293.7, // D4
@@ -29,7 +49,7 @@ const float octave5[] = {
 	987.8, // B5
 };
 
-const struct Note melody[] = {
+const struct Note melody_notes[] = {
 	{octave5[2], 1},
 	{octave4[6], 0.5},
 	{octave5[0], 0.5},
@@ -71,6 +91,47 @@ const struct Note melody[] = {
 	{0, 1},
 };
 
+const struct Note bass_notes[] = {
+	{octave2[2], 0.5},
+	{octave3[2], 0.5},
+	{octave2[2], 0.5},
+	{octave3[2], 0.5},
+	{octave2[2], 0.5},
+	{octave3[2], 0.5},
+	{octave2[2], 0.5},
+	{octave3[2], 0.5},
+
+	{octave2[5], 0.5},
+	{octave3[5], 0.5},
+	{octave2[5], 0.5},
+	{octave3[5], 0.5},
+	{octave2[5], 0.5},
+	{octave3[5], 0.5},
+	{octave2[5], 0.5},
+	{octave3[5], 0.5},
+
+	{103.8, 0.5},
+	{207.7, 0.5},
+	{103.8, 0.5},
+	{207.7, 0.5},
+
+	{octave2[2], 0.5},
+	{octave3[2], 0.5},
+	{octave2[2], 0.5},
+	{octave3[2], 0.5},
+
+	{octave2[5], 0.5},
+	{octave3[5], 0.5},
+	{octave2[5], 0.5},
+	{octave3[5], 0.5},
+	{octave2[5], 0.5},
+	{octave3[5], 0.5},
+
+	{octave2[6], 0.5},
+	{octave3[0], 0.5},
+	{octave3[1], 0.5},
+};
+
 const struct Note snare_timings[] = {
 	{0, 1},
 	{0, 1},
@@ -99,13 +160,17 @@ void update_song(struct Song* song, float dt) {
 
 void audio_callback(void* userdata, Uint8* stream, int len) {
 	struct AudioState* state = (struct AudioState*)userdata;
+	struct Song* melody = &state->melody;
+	struct Song* bass = &state->bass;
 	float volume = 0.1;
 
 	for (int i = 0; i < len; i++) {
-		struct Song* melody = &state->melody;
 		const struct Note current_note = melody->notes[melody->current_note];
+		const struct Note current_bass_note = bass->notes[bass->current_note];
+
 		// Update current note
 		update_song(melody, 1.0 / state->sample_rate);
+		update_song(bass, 1.0 / state->sample_rate);
 		update_song(&state->snare, 1.0 / state->sample_rate);
 		float duration_of_note = current_note.duration * 60 / state->bpm;
 
@@ -135,9 +200,16 @@ void audio_callback(void* userdata, Uint8* stream, int len) {
 			melody->phase -= 1;
 		}
 
+		bass->phase += current_bass_note.frequency / state->sample_rate;
+		if (bass->phase >= 1) {
+			bass->phase -= 1;
+		}
+
 		// Turn sawtooth wave into square wave
 		float wave = (melody->phase < 0.5) ? 1 : -1;
 		wave *= envelope;
+		wave += (bass->phase < 0.5) ? 1 : -1;
+
 		if (state->snare.time_in_note >= 0 && state->snare.time_in_note < 0.02) {
 			wave += rand() / (float)RAND_MAX * 1 - 0.5;
 		}
@@ -163,11 +235,17 @@ void init_audio() {
 	audio_state.bpm = 150;
 	audio_state.sample_rate = have.freq;
 
-	audio_state.melody.notes = melody;
-	audio_state.melody.length = sizeof(melody) / sizeof(melody[0]);
+	audio_state.melody.notes = melody_notes;
+	audio_state.melody.length = sizeof(melody_notes) / sizeof(melody_notes[0]);
 	audio_state.melody.time_in_note = 0;
 	audio_state.melody.current_note = 0;
 	audio_state.melody.phase = 0;
+
+	audio_state.bass.notes = bass_notes;
+	audio_state.bass.length = sizeof(bass_notes) / sizeof(bass_notes[0]);
+	audio_state.bass.time_in_note = 0;
+	audio_state.bass.current_note = 0;
+	audio_state.bass.phase = 0;
 
 	audio_state.snare.notes = snare_timings;
 	audio_state.snare.length = sizeof(snare_timings) / sizeof(snare_timings[0]);

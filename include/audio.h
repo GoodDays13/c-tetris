@@ -18,6 +18,7 @@ struct Song {
 
 struct AudioState {
 	struct Song melody;
+	struct Song bass;
 	struct Song snare;
 	int sample_rate;
 	float bpm;
