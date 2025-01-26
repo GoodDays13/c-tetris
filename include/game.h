@@ -4,6 +4,8 @@
 #define GRID_WIDTH 10
 #define GRID_HEIGHT 20
 
+#include "input.h"
+
 struct Location {
 	int x;
 	int y;
@@ -22,13 +24,6 @@ enum PieceType {
 struct Piece {
 	struct Location locations[4];
 	enum PieceType type;
-};
-
-struct Inputs {
-	int left;
-	int right;
-	int down;
-	int rotate;
 };
 
 struct GameState {

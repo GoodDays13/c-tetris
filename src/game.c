@@ -43,8 +43,16 @@ init_game(struct GameState *game) {
 
 void
 update_game(struct GameState *game, struct Inputs *inputs, float delta_time) {
+	if (inputs->restart) {
+		inputs->restart = 0;
+		if (game->game_over) {
+			init_game(game);
+		}
+	}
+
 	if (game->game_over)
 		return;
+
 	handle_moves(game, inputs);
 
 	game->time_till_drop -= delta_time;
