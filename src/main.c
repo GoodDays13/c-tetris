@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "game.h"
+#include "audio.h"
 
 int main(int argc, char *argv[]) {
 	(void)argc;
@@ -13,6 +14,7 @@ int main(int argc, char *argv[]) {
 	struct GameState gamestate = {0};
 	struct Inputs inputs = {0};
 	init_game(&gamestate);
+	init_audio();
 
 	static unsigned int last_time = 0;
 	int running = 1;
@@ -68,6 +70,7 @@ int main(int argc, char *argv[]) {
 		// Render
 		render_game(&renderer, &gamestate);
 	}
+	cleanup_audio();
 	destroy_window(&renderer);
 
 	return 0;
