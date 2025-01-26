@@ -22,6 +22,7 @@ struct AudioState {
 	struct Song snare;
 	int sample_rate;
 	float bpm;
+	float low_pass_past_sample;
 };
 
 void init_audio(void);

@@ -130,6 +130,37 @@ const struct Note bass_notes[] = {
 	{octave2[6], 0.5},
 	{octave3[0], 0.5},
 	{octave3[1], 0.5},
+
+	{octave2[1], 0.5},
+	{0, 0.5},
+	{octave2[1], 0.5},
+	{0, 0.5},
+	{octave2[1], 0.5},
+	{octave2[5], 0.5},
+	{octave2[3], 0.5},
+	{octave2[0], 0.5},
+	{octave3[0], 0.5},
+	{0, 0.5},
+	{octave3[0], 0.5},
+	{octave2[0], 0.5},
+	{octave2[4], 0.4},
+	{0, 0.1},
+	{octave2[4], 0.5},
+	{0, 0.5},
+	{octave2[6], 0.5},
+	{octave3[6], 0.5},
+	{0, 0.5},
+	{octave3[6], 0.5},
+	{0, 0.5},
+	{octave3[2], 0.5},
+	{0, 0.5},
+	{207.7, 0.5},
+	{octave2[5], 0.5},
+	{octave3[2], 0.5},
+	{octave2[5], 0.5},
+	{octave3[2], 0.5},
+	{octave2[5], 1},
+	{0, 1},
 };
 
 const struct Note snare_timings[] = {
@@ -194,7 +225,7 @@ void audio_callback(void* userdata, Uint8* stream, int len) {
 		}
 
 
-		// Generate sawtooth wave
+		// Update phase
 		melody->phase += current_note.frequency / state->sample_rate;
 		if (melody->phase >= 1) {
 			melody->phase -= 1;
@@ -205,10 +236,18 @@ void audio_callback(void* userdata, Uint8* stream, int len) {
 			bass->phase -= 1;
 		}
 
-		// Turn sawtooth wave into square wave
+		// Generate wave
 		float wave = (melody->phase < 0.5) ? 1 : -1;
+		envelope *= 0.7;
 		wave *= envelope;
-		wave += (bass->phase < 0.5) ? 1 : -1;
+
+		float basswave = (bass->phase < 0.25) ? 1.0 : -0.33;
+
+		// Add basic low-pass filter
+		float cutoff = 0.1; // Adjust between 0-1 to change filter frequency
+		basswave = audio_state.low_pass_past_sample + cutoff * (basswave - audio_state.low_pass_past_sample);
+		audio_state.low_pass_past_sample = basswave;
+		wave += basswave;
 
 		if (state->snare.time_in_note >= 0 && state->snare.time_in_note < 0.02) {
 			wave += rand() / (float)RAND_MAX * 1 - 0.5;
@@ -234,6 +273,7 @@ void init_audio() {
 
 	audio_state.bpm = 150;
 	audio_state.sample_rate = have.freq;
+	audio_state.low_pass_past_sample = 0;
 
 	audio_state.melody.notes = melody_notes;
 	audio_state.melody.length = sizeof(melody_notes) / sizeof(melody_notes[0]);
