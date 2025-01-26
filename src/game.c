@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "game.h"
+#include "audio.h"
 
 const struct Piece pieces[] = {
 	{{{5, 0}, {5, 1}, {4, 1}, {4, 2}}, PIECE_Z}, // Z
@@ -36,6 +37,8 @@ init_game(struct GameState *game) {
 	game->score = 0;
 	game->speed = 1.0;
 	game->time_till_drop = 1.0;
+
+	play_music();
 }
 
 void
@@ -130,6 +133,7 @@ create_piece(struct GameState *game) {
 		if (game->grid[game->current_piece.locations[i].y][game->current_piece.locations[i].x]) {
 			game->bucket_index--;
 			game->game_over = 1;
+			stop_music();
 		}
 	}
 }

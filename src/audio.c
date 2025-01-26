@@ -277,22 +277,31 @@ void init_audio() {
 
 	audio_state.melody.notes = melody_notes;
 	audio_state.melody.length = sizeof(melody_notes) / sizeof(melody_notes[0]);
+
+	audio_state.bass.notes = bass_notes;
+	audio_state.bass.length = sizeof(bass_notes) / sizeof(bass_notes[0]);
+
+	audio_state.snare.notes = snare_timings;
+	audio_state.snare.length = sizeof(snare_timings) / sizeof(snare_timings[0]);
+}
+
+void play_music() {
 	audio_state.melody.time_in_note = 0;
 	audio_state.melody.current_note = 0;
 	audio_state.melody.phase = 0;
 
-	audio_state.bass.notes = bass_notes;
-	audio_state.bass.length = sizeof(bass_notes) / sizeof(bass_notes[0]);
 	audio_state.bass.time_in_note = 0;
 	audio_state.bass.current_note = 0;
 	audio_state.bass.phase = 0;
 
-	audio_state.snare.notes = snare_timings;
-	audio_state.snare.length = sizeof(snare_timings) / sizeof(snare_timings[0]);
 	audio_state.snare.time_in_note = -0.5 * 60 / audio_state.bpm;
 	audio_state.snare.current_note = 0;
 
 	SDL_PauseAudio(0);
+}
+
+void stop_music() {
+	SDL_PauseAudio(1);
 }
 
 void cleanup_audio() {

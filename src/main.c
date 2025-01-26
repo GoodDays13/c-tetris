@@ -13,8 +13,8 @@ int main(int argc, char *argv[]) {
 
 	struct GameState gamestate = {0};
 	struct Inputs inputs = {0};
-	init_game(&gamestate);
 	init_audio();
+	init_game(&gamestate);
 
 	static unsigned int last_time = 0;
 	int running = 1;
@@ -49,8 +49,9 @@ int main(int argc, char *argv[]) {
 							inputs.rotate = 1;
 							break;
 						case SDLK_r:
-							if (gamestate.game_over)
+							if (gamestate.game_over) {
 								init_game(&gamestate);
+							}
 							break;
 					}
 					break;

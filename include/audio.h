@@ -26,6 +26,8 @@ struct AudioState {
 };
 
 void init_audio(void);
+void play_music(void);
+void stop_music(void);
 void cleanup_audio(void);
 
 #endif // AUDIO_H
