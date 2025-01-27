@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
 	struct Renderer renderer;
 
 	int block_size = 24;
-	if (create_window(&renderer, "New Window", (GRID_WIDTH + 6 * 2) * block_size, GRID_HEIGHT * block_size + 2))
+	if (create_window(&renderer, "Tetris", (GRID_WIDTH + 6 * 2) * block_size, GRID_HEIGHT * block_size + 2))
 		return 1;
 
 	struct GameState gamestate = {0};
