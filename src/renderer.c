@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "game.h"
+#include <stdio.h>
 #include <SDL2/SDL_render.h>
 
 struct Color {

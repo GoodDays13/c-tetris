@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
 	struct GameState gamestate = {0};
 	struct Inputs inputs = {0};
-	init_audio();
+	int play_audio = !init_audio();
 	init_game(&gamestate);
 
 	static unsigned int last_time = 0;
@@ -34,7 +34,9 @@ int main(int argc, char *argv[]) {
 		// Render
 		render_game(&renderer, &gamestate);
 	}
-	cleanup_audio();
+	if (play_audio) {
+		cleanup_audio();
+	}
 	destroy_window(&renderer);
 
 	return 0;
