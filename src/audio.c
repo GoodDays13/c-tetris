@@ -179,6 +179,74 @@ const struct Note snare_timings[] = {
 	{0, 7.5, 0.02, 0, 0, 1, 0, SNARE},
 };
 
+const struct Note harmony_notes[] = {
+	{octave3[5],  0.0, 4.0, 0, 0, 0.5, 0, MELODY},
+	{octave4[2],  0.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave4[0],  2.0, 2.0, 0, 0, 1, 0, MELODY},
+	{207.7,       4.0, 4.0, 0, 0, 0.5, 0, MELODY},
+	{octave4[1],  4.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave3[6],  6.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave3[5],  8.0, 2.0, 0, 0, 0.5, 0, MELODY},
+	{octave4[0],  8.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave3[2], 10.0, 4.0, 0, 0, 0.5, 0, MELODY},
+	{octave3[5], 10.0, 2.0, 0, 0, 1, 0, MELODY},
+	{207.7,      12.0, 3.0, 0, 0, 1, 0, MELODY},
+	{octave3[6], 14.0, 1.0, 0, 0, 1, 0, MELODY},
+
+	{octave3[5], 16.0, 4.0, 0, 0, 0.5, 0, MELODY},
+	{octave4[2], 16.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave4[0], 18.0, 2.0, 0, 0, 1, 0, MELODY},
+	{207.7,      20.0, 4.0, 0, 0, 0.5, 0, MELODY},
+	{octave4[1], 20.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave3[6], 22.0, 2.0, 0, 0, 1, 0, MELODY},
+
+	{octave3[5], 24.0, 1.5, 0, 0, 0.5, 0, MELODY},
+	{octave4[0], 24.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave4[2], 25.0, 1.0, 0, 0, 1, 0, MELODY},
+	{311.1,      26.0, 2.0, 0, 0, 0.5, 0, MELODY},
+	{octave4[5], 26.0, 2.0, 0, 0, 1, 0, MELODY},
+	{octave4[1],      28.0, 2.0, 0, 0, 0.5, 0, MELODY},
+	{415.3,      28.0, 2.0, 0, 0, 1, 0, MELODY},
+};
+
+const struct Note harmony_bass[] = {
+	/*{207.7,       0.0, 0.5, 0, 0, 0.5, 0, BASS},*/
+	{octave4[2], 0.5, 0.5, 0, 0, 0.5, 0, BASS},
+	/*{207.7,      1.0, 0.5, 0, 0, 0.5, 0, BASS},*/
+	{octave4[2], 1.5, 0.5, 0, 0, 0.5, 0, BASS},
+	/*{207.7,      2.0, 0.5, 0, 0, 0.5, 0, BASS},*/
+	{octave4[2], 2.5, 0.5, 0, 0, 0.5, 0, BASS},
+	/*{207.7,      3.0, 0.5, 0, 0, 0.5, 0, BASS},*/
+	{octave4[2], 3.5, 0.5, 0, 0, 0.5, 0, BASS},
+	/*{207.7,      4.0, 0.5, 0, 0, 0.5, 0, BASS},*/
+	{octave4[2], 4.5, 0.5, 0, 0, 0.5, 0, BASS},
+	/*{207.7,      5.0, 0.5, 0, 0, 0.5, 0, BASS},*/
+	{octave4[2], 5.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 6.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 7.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 8.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 9.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 10.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 11.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 12.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 13.5, 0.5, 0, 0, 0.5, 0, BASS},
+	
+	{octave4[2], 16.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 17.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 18.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 19.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 20.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 21.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 22.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 23.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 24.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 25.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 26.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 27.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 28.5, 0.5, 0, 0, 0.5, 0, BASS},
+	{octave4[2], 29.5, 0.5, 0, 0, 0.5, 0, BASS},
+};
+
 void play_track(struct AudioState* audio, struct Track* track) {
 	struct PlayingTrack* playing_track = malloc(sizeof(struct PlayingTrack));
 	playing_track->track = track;
@@ -330,7 +398,7 @@ void audio_callback(void* userdata, Uint8* stream, int len) {
 					break;
 				}
 				case SNARE:
-					wave += rand() / (float)RAND_MAX * 1 - 0.5;
+					wave += rand() / (float)RAND_MAX;
 					break;
 			}
 
@@ -393,12 +461,24 @@ void play_music() {
 		return;
 	}
 	melody->notes = melody_notes;
-	melody->length = 32;
+	melody->length = 32 * 3;
 	melody->note_count = sizeof(melody_notes) / sizeof(melody_notes[0]);
 	melody->repeat = 1;
 	melody->current_time = 0;
 	melody->next_note = 0;
 	melody->bpm = 150;
+	struct Track *melody2 = malloc(sizeof(struct Track));
+	if (melody == NULL) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for second melody track\n");
+		return;
+	}
+	melody2->notes = melody_notes;
+	melody2->length = 32 * 3;
+	melody2->note_count = sizeof(melody_notes) / sizeof(melody_notes[0]);
+	melody2->repeat = 1;
+	melody2->current_time = -32.0 * 60 / 150;
+	melody2->next_note = 0;
+	melody2->bpm = 150;
 
 	struct Track *bass = malloc(sizeof(struct Track));
 	if (bass == NULL) {
@@ -406,12 +486,24 @@ void play_music() {
 		return;
 	}
 	bass->notes = bass_notes;
-	bass->length = 32;
+	bass->length = 32 * 3;
 	bass->note_count = sizeof(bass_notes) / sizeof(bass_notes[0]);
 	bass->repeat = 1;
 	bass->current_time = 0;
 	bass->next_note = 0;
 	bass->bpm = 150;
+	struct Track *bass2 = malloc(sizeof(struct Track));
+	if (bass2 == NULL) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for bass track\n");
+		return;
+	}
+	bass2->notes = bass_notes;
+	bass2->length = 32 * 3;
+	bass2->note_count = sizeof(bass_notes) / sizeof(bass_notes[0]);
+	bass2->repeat = 1;
+	bass2->current_time = -32.0 * 60 / 150;
+	bass2->next_note = 0;
+	bass2->bpm = 150;
 
 	struct Track *snare = malloc(sizeof(struct Track));
 	if (snare == NULL) {
@@ -426,9 +518,39 @@ void play_music() {
 	snare->next_note = 0;
 	snare->bpm = 150;
 
+	struct Track *harmony = malloc(sizeof(struct Track));
+	if (harmony == NULL) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for harmony track\n");
+		return;
+	}
+	harmony->notes = harmony_notes;
+	harmony->length = 32 * 3;
+	harmony->note_count = sizeof(harmony_notes) / sizeof(harmony_notes[0]);
+	harmony->repeat = 1;
+	harmony->current_time = -32.0 * 2 * 60 / 150;
+	harmony->next_note = 0;
+	harmony->bpm = 150;
+
+	struct Track *harmony_bass_track = malloc(sizeof(struct Track));
+	if (harmony_bass_track == NULL) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for harmony bass track\n");
+		return;
+	}
+	harmony_bass_track->notes = harmony_bass;
+	harmony_bass_track->length = 32 * 3;
+	harmony_bass_track->note_count = sizeof(harmony_bass) / sizeof(harmony_bass[0]);
+	harmony_bass_track->repeat = 1;
+	harmony_bass_track->current_time = -32.0 * 2 * 60 / 150;
+	harmony_bass_track->next_note = 0;
+	harmony_bass_track->bpm = 150;
+
 	play_track(&audio_state, melody);
+	play_track(&audio_state, melody2);
 	play_track(&audio_state, bass);
+	play_track(&audio_state, bass2);
 	play_track(&audio_state, snare);
+	play_track(&audio_state, harmony);
+	play_track(&audio_state, harmony_bass_track);
 
 	SDL_PauseAudio(0);
 }
