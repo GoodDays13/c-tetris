@@ -347,7 +347,7 @@ void audio_callback(void* userdata, Uint8* stream, int len) {
 	// Get the length of the stream
 	int len_f32 = len / sizeof(float);
 
-	for (int i = 0; i < len_f32; i++) {
+	for (int i = 0; i < len_f32; i += audio_state.channels) {
 		struct PlayingTrack *song = state->playing_tracks;
 		while (song) {
 			update_track(song, 1.0 / state->sample_rate);
@@ -416,7 +416,9 @@ void audio_callback(void* userdata, Uint8* stream, int len) {
 			/*}*/
 		}
 		wave *= volume;
-		stream_f32[i] = wave;
+		for (int channel = 0; channel < audio_state.channels; channel++) {
+			stream_f32[i + channel] = wave;
+		}
 		/*stream[i] = (wave + 1) * 127;*/
 	}
 };
@@ -434,13 +436,16 @@ int init_audio() {
 		SDL_Log("Failed to open audio: %s\n", SDL_GetError());
 		exit(1);
 	}
-	// print AUDIO_F32LSB first
-	/*printf("Audio format: %b\n", AUDIO_F32LSB);*/
-	/*printf("Audio format: %b\n", have.format);*/
-	/*printf("Audio format signed: %s\n", SDL_AUDIO_ISSIGNED(have.format) ? "true" : "false");*/
-	/*printf("Audio format big endian: %s\n", SDL_AUDIO_ISBIGENDIAN(have.format) ? "true" : "false");*/
-	/*printf("Audio format is float: %s\n", SDL_AUDIO_ISFLOAT(have.format) ? "true" : "false");*/
-	/*printf("Audio format bit size: %d\n", SDL_AUDIO_BITSIZE(have.format));*/
+	// // print AUDIO_F32LSB first
+	// SDL_Log("Got format: %d\n", have.format);
+	// SDL_Log("Sample rate: %d Hz\n", have.freq);
+	// printf("Sample rate: %d Hz\n", have.freq);
+	// SDL_Log("Audio format: %b\n", have.format);
+	// SDL_Log("Audio format signed: %s\n", SDL_AUDIO_ISSIGNED(have.format) ? "true" : "false");
+	// SDL_Log("Audio format big endian: %s\n", SDL_AUDIO_ISBIGENDIAN(have.format) ? "true" : "false");
+	// SDL_Log("Audio format is float: %s\n", SDL_AUDIO_ISFLOAT(have.format) ? "true" : "false");
+	// SDL_Log("Audio format bit size: %d\n", SDL_AUDIO_BITSIZE(have.format));
+	// SDL_Log("Channels: %d\n", have.channels);
 
 	if (have.format != want.format) {
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to get desired audio format\n");
@@ -449,12 +454,20 @@ int init_audio() {
 	}
 
 	audio_state.sample_rate = have.freq;
+	audio_state.channels = have.channels;
 	audio_state.low_pass_past_sample = 0;
+
+	audio_state.initialized = 1;
 
 	return 0;
 }
 
 void play_music() {
+	if (!audio_state.initialized) {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Audio not initialized\n");
+		return;
+	}
+
 	struct Track *melody = malloc(sizeof(struct Track));
 	if (melody == NULL) {
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to allocate memory for melody track\n");
@@ -562,5 +575,8 @@ void stop_music() {
 }
 
 void cleanup_audio() {
-	SDL_CloseAudio();
+	if (audio_state.initialized) {
+		SDL_CloseAudio();
+		audio_state.initialized = 0;
+	}
 }

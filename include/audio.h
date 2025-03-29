@@ -49,7 +49,9 @@ struct AudioState {
 	struct PlayingTrack *playing_tracks;
 	struct PlayingNote *playing_notes;
 	int sample_rate;
+	int channels;
 	float low_pass_past_sample;
+	int initialized;
 };
 
 int init_audio(void);
