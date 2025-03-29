@@ -1,4 +1,3 @@
 .cache/
-bin/
-obj/
+build*/
 compile_commands.json
